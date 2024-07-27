@@ -196,15 +196,15 @@ func (r *VirtualMachineReconciler) updateCRD(ctx context.Context) error {
 //
 // CRD Life Cycle Methods Overview
 //
-// Claim -> Sync ... Sync -> Withdraw
-// -------------------------------------------> t (axis)
-//   t_{1} 	 t_{2}  					 t_{n}
-//	 | 			 |				  			 |
-// 	 |			 |			    			 |---------------| Retract interest wrt the VM and decrement the gauge
-// 	 | 			 |
-//   | 			 |---------------------------------| Drive CRD state towards current VM state in UpCloud API
-// 	 |
-//   |-----------------------------------------| Initiate syncing and increment the gauge
+// 	Claim  -> 	Sync  ... 	Sync  -> 	Withdraw
+// 0 ----------------------------------------------------------------> t (axis)
+//   	t_{1} 	 	t_{2}  				t_{n}
+//	 |		 |		 		 |
+//	 |		 |		 		 |---------------| Retract interest wrt the VM and decrement the gauge
+//	 | 		 |
+//	 | 		 |-----------------------------------------------| Drive CRD state towards current VM state in UpCloud API
+//	 |
+//   	 |---------------------------------------------------------------| Initiate syncing and increment the gauge
 
 func (r *VirtualMachineReconciler) customResourceLifeCycleClaim(ctx context.Context) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
