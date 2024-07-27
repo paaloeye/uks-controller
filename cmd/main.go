@@ -18,8 +18,10 @@ package main
 
 import (
 	"crypto/tls"
+	"errors"
 	"flag"
 	"os"
+	"time"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
@@ -36,8 +38,14 @@ import (
 
 	corev1alpha1 "github.com/pbrit/uks-controller/api/v1alpha1"
 	"github.com/pbrit/uks-controller/internal/controller"
+
 	//+kubebuilder:scaffold:imports
+
+	"github.com/UpCloudLtd/upcloud-go-api/v8/upcloud/client"
+	"github.com/UpCloudLtd/upcloud-go-api/v8/upcloud/service"
 )
+
+const syncIntervalDefault = 15
 
 var (
 	scheme   = runtime.NewScheme()
@@ -57,6 +65,7 @@ func main() {
 	var probeAddr string
 	var secureMetrics bool
 	var enableHTTP2 bool
+	var syncInterval int
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
 	flag.BoolVar(&enableLeaderElection, "leader-elect", false,
@@ -66,6 +75,7 @@ func main() {
 		"If set the metrics endpoint is served securely")
 	flag.BoolVar(&enableHTTP2, "enable-http2", false,
 		"If set, HTTP/2 will be enabled for the metrics and webhook servers")
+	flag.IntVar(&syncInterval, "sync-interval", syncIntervalDefault, "Sync interval (in seconds) for polling UpCloud API")
 	opts := zap.Options{
 		Development: true,
 	}
@@ -122,9 +132,25 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Create UpCloud API Client
+	upCloudAPIUsername := os.Getenv("UPCLOUD_API_USERNAME")
+	upCloudAPIPassword := os.Getenv("UPCLOUD_API_PASSWORD")
+
+	if upCloudAPIUsername == "" || upCloudAPIPassword == "" {
+		setupLog.Error(errors.New("UPCLOUD_API_USERNAME and UPCLOUD_API_PASSWORD must be set"), "")
+	}
+
+	upCloudAPIClient := client.New(upCloudAPIUsername, upCloudAPIPassword, client.WithTimeout(time.Second*30))
+	upCloudSVC := service.New(upCloudAPIClient)
+
+	setupLog.Info("upCloudAPIClient ready")
+
 	if err = (&controller.VirtualMachineReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+		Client:             mgr.GetClient(),
+		Scheme:             mgr.GetScheme(),
+		ConfigSyncInterval: time.Duration(syncInterval) * time.Second,
+		UpCloudClient:      upCloudAPIClient,
+		UpCloudSVC:         upCloudSVC,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "VirtualMachine")
 		os.Exit(1)

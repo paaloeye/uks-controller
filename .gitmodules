@@ -1,0 +1,3 @@
+[submodule "lib/upcloud-go-api"]
+	path = lib/upcloud-go-api
+	url = https://github.com/pbrit/upcloud-go-api.git

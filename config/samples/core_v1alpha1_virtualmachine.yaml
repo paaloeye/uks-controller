@@ -1,12 +1,15 @@
 apiVersion: core.infra.upcloud.com/v1alpha1
 kind: VirtualMachine
 metadata:
+  # name: deadbeaf-dead-beef-dead-beefdeadbeef # Case: VM doesn't exist
+  # name: 00fae535-e73c-4bd1-9efa-0fe8ad5bd949 # Case: VM exists
+  # name: 0f1c3345-b139-4f01-b9ba-d75796059194 # Case uuidgen
+  name: 001c3345-b139-4f01-b9ba-d75796059194   # Case uuidgen with leading 00
   labels:
     app.kubernetes.io/name: virtualmachine
     app.kubernetes.io/instance: virtualmachine-sample
     app.kubernetes.io/part-of: uks-controller
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: uks-controller
-  name: virtualmachine-sample
 spec:
-  # TODO(user): Add fields here
+  # NB: There are no spec because VM and CRD mapped using `metadata.name` which should be equal to VMs UUID

@@ -7,7 +7,16 @@
 package v1alpha1
 
 import (
+	"github.com/UpCloudLtd/upcloud-go-api/v8/upcloud"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
+
+type ConnectionStatus string
+
+const (
+	NotFound        ConnectionStatus = "NotFound"
+	Synced          ConnectionStatus = "Synced"
+	UpCloudAPIError ConnectionStatus = "UpCloudAPIError"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
@@ -17,21 +26,29 @@ import (
 type VirtualMachineSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of VirtualMachine. Edit virtualmachine_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
 }
 
 // VirtualMachineStatus defines the observed state of VirtualMachine
 type VirtualMachineStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+
+	Connection          upcloud.ServerDetails `json:"connection,omitempty"`
+	ConnectionStatus    ConnectionStatus      `json:"connection_status,omitempty"`
+	ConnectionLastError string                `json:"connection_last_error,omitempty"`
+	ConnectionSyncedAt  metav1.Time           `json:"connection_synced_at,omitempty"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Connection Status",type=string,JSONPath=`.status.connection_status`
+// +kubebuilder:printcolumn:name="Hostname",type=string,JSONPath=`.status.connection.hostname`
+// +kubebuilder:printcolumn:name="Zone",type=string,JSONPath=`.status.connection.zone`
+// +kubebuilder:printcolumn:name="Power state",type=string,JSONPath=`.status.connection.state`
+// +kubebuilder:printcolumn:name="Synced at",type="string",JSONPath=".status.connection_synced_at"
+// +kubebuilder:printcolumn:name="Sync age",type="date",JSONPath=".status.connection_synced_at"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
-// VirtualMachine is the Schema for the virtualmachines API
 type VirtualMachine struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -42,7 +59,6 @@ type VirtualMachine struct {
 
 //+kubebuilder:object:root=true
 
-// VirtualMachineList contains a list of VirtualMachine
 type VirtualMachineList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
