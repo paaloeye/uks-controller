@@ -22,7 +22,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/metrics"
 
-	corev1alpha1 "github.com/pbrit/uks-controller/api/v1alpha1"
+	corev1alpha1 "github.com/paaloeye/uks-controller/api/v1alpha1"
 
 	"github.com/UpCloudLtd/upcloud-go-api/v8/upcloud"
 	upcloudclient "github.com/UpCloudLtd/upcloud-go-api/v8/upcloud/client"
@@ -31,7 +31,7 @@ import (
 
 	"github.com/bytedance/sonic"
 
-	o11y "github.com/pbrit/uks-controller/internal/observability"
+	o11y "github.com/paaloeye/uks-controller/internal/observability"
 )
 
 type ContextKey string

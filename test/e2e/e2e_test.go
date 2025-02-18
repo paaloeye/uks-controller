@@ -24,7 +24,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/pbrit/uks-controller/test/utils"
+	"github.com/paaloeye/uks-controller/test/utils"
 )
 
 const namespace = "uks-controller-system"

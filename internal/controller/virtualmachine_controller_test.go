@@ -17,7 +17,7 @@ import (
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	corev1alpha1 "github.com/pbrit/uks-controller/api/v1alpha1"
+	corev1alpha1 "github.com/paaloeye/uks-controller/api/v1alpha1"
 )
 
 var _ = Describe("VirtualMachine Controller", func() {

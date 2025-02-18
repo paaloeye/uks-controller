@@ -1,4 +1,4 @@
-module github.com/pbrit/uks-controller
+module github.com/paaloeye/uks-controller
 
 go 1.21
 
