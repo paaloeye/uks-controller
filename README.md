@@ -4,16 +4,16 @@ SPDX-License-Identifier: MPL-2.0
 
 # uks-controller
 
-Custom Kubernetes controller designed to view VMs from UpCloud API using `kubectl`
+A custom Kubernetes controller that provides seamless integration with the UpCloud API, allowing you to manage UpCloud Virtual Machines directly through `kubectl`.
+
+## Features
+
+- View and monitor UpCloud VMs using standard Kubernetes tooling
+- Prometheus metrics integration for monitoring sync status
+- Configurable sync interval
+- Detailed logging with multiple verbosity levels
 
 ## Quickstart
-
-### Setup UpCloud API Credentials
-
-```shell
-export UPCLOUD_API_USERNAME=
-export UPCLOUD_API_PASSWORD=
-```
 
 ### Pull vendored `upcloud-go-api`
 
