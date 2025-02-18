@@ -1,3 +1,7 @@
+<!--
+SPDX-License-Identifier: MPL-2.0
+-->
+
 # uks-controller
 
 Custom Kubernetes controller designed to view VMs from UpCloud API using `kubectl`
@@ -69,3 +73,8 @@ UpCloud API credentials are set in `os.Environ`
   - https://github.com/kubernetes/community/blob/master/contributors/devel/sig-instrumentation/logging.md#what-method-to-use
   - https://book.kubebuilder.io/
   - https://go.dev/doc/modules/gomod-ref
+
+## Licence
+
+Licensed under the [Mozilla Public License 2.0 (MPL-2.0)](https://www.mozilla.org/en-US/MPL/2.0/).
+See [LICENCE](LICENCE.md) for details and [legal TL;DR](https://www.tldrlegal.com/license/mozilla-public-license-2-0-mpl-2).
